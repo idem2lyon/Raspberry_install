@@ -49,6 +49,22 @@ Run without any argument will default to installation."
 }
 
 
+function net() { 
+  echo -en "Checking for internet connection"; sleep 0.2
+  for i in $(seq 3); do echo -n '.'; sleep 0.8; done  # waiting time
+  ping -c 3 8.8.8.8 &>/dev/null && { echo -e "${G}Success!\n$W"; return \
+    0; } || { echo -e "${R}Failure! Please connect to the Internet!\n$W" >&2;
+    return 1; }
+}
+
+function title() { echo -e "\033[92m\
+      ____  ____  _       ___   __  ______
+     / __ \/ __ \(_)     /   | / / / /  _/   The Raspberry PI
+    / /_/ / /_/ / ______/ /| |/ / / // /    Arch Linux ARM
+   / _, _/ ____/ /_____/ ___ / /_/ _/ /    [ Ultimate ]
+  /_/ |_/_/   /_/     /_/  |_\____/___/   Installer\n\033[m"; return 0
+}
+
 #---------------------------------------------------------------------------
 # Main
 #---------------------------------------------------------------------------
@@ -60,7 +76,10 @@ Run without any argument will default to installation."
 # Root privilege
 [[ $UID -ne 0 ]] && { echo -e "\e[31mPlease run as root!\e[m"; exit 1; }
 
+net
+
 # Print the title
+title
 echo ""
 echo "##############################################################"
 echo "##   Welcome to Setup Pi v1.0                               ##"
