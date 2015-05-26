@@ -70,7 +70,7 @@ echo "  "
 sleep 1
 
 # Confirmation for installation
-read -p "Do you want to install Arch Linux Ultimate Install? " -e -n 1 ch
+read -p "Do you want to install Ultimate Raspberry Installation scripts? " -e -n 1 ch
 [[ $ch != [Yy] ]] && thank
 
 # Install dependencies
