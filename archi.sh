@@ -1,11 +1,8 @@
 #!/bin/bash
-# Created by Ivan Tham <pickfire@riseup.net> - Fri Jan  9 03:29:46 UTC 2015
-# DESCRIPTION	: The main part of RPi-AUI
-# TODO(pickfire): colorized output and reorganize TUI
-# Arch Installer- Raspberry Pi v6.2
-# Remove Carriage return sed -i 's/ \r//g' <filename>
+# Created by idem2lyon <idem@geekandmore.fr>
+# DESCRIPTION	: The main part of Uris
 #---------------------------------------------------------------------------
-#    Copyright (C) Prathyush 2015
+#    Copyright (C) idem2lyon 2015
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,7 +21,7 @@
 # Variables
 #----------------------------------------------------------------------------
 # Defaults
-rpi_aui=/opt/RPi-AUI/AUI; aui_doc=/opt/RPi-AUI/doc
+uris=/opt/Raspberry_install
 defsleep=0;
 uisleep=2;
 r='\033[91m'; g='\033[92m'; w='\033[0m' # Colours
@@ -54,8 +51,8 @@ function checkr() { # Check if user is running as root
 #function top() { # function top -> $rpi_aui/./main.sh title
 #  clear
 #  echo "##############################################################"
-#  echo "##   Welcome to Arch Linux - Raspberry Pi Setup v6.2        ##"
-#  echo "##   -- By kingspp                                          ##"
+#  echo "##   Welcome to Uris                                        ##"
+#  echo "##   -- By idem2lyon                                        ##"
 #  echo "##############################################################"
 #  echo "  "
 #  sleep $defsleep
