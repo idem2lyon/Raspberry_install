@@ -45,6 +45,17 @@ function checkr() { # Check if user is running as root
 #  fi
 #}
 
+function yesorno() {
+  while : ; do  # ask again when there's no default preference
+  # Usage: $ main.sh yn "Question: [Y/n]"   Note: [Y/n] -> default Y
+  echo -en "$1 "; read -n 1 ans; echo # echo with 1 space & read 1 character
+  [[ $ans == [Yy] ]] && { exit 0; } # return success if ans = y or Y
+  [[ $ans == [Nn] ]] && { exit 1; } # return failure if ans = n or N
+  [[ $(grep -o '\[./.\]' <<< $1) == *'Y'* ]] && exit 0 # [Y/n] -> default Y
+  [[ $(grep -o '\[./.\]' <<< $1) == *'N'* ]] && exit 1 # [y/N] -> default N
+done
+}
+
 function install() { # Default Installation
   $rpi_aui/main.sh title
   echo "Updating $(grep "^ID=" /etc/*-release|cut -d= -f2)..."
@@ -52,21 +63,6 @@ function install() { # Default Installation
   $rpi_aui/main.sh pkg_de   # Package management initialization
   sleep $defsleep; echo "Installing base and base-devel packages..."
   $rpi_aui/main.sh pkg_in base base-devel
-
-  # Different initialisation for different distribution
-  # TODO: Add this to tips && tricks
-  case $(grep "^ID_LIKE=" /etc/*-release | cut -d = -f 2) in
-    arch) pac=/etc/pacman.conf
-      $rpi_aui/./yn.sh "Pacman uses candy instead of bored hashes? [Y/n]" &&
-        sed -i '/# Misc/a ILoveCandy' $pac || sed -i 's/ILoveCandy/#&/' $pac
-      $rpi_aui/./yn.sh "Do you want pacman to be in colours? [Y/n]" &&
-        sed -i 's/#Color/Color/' $pac || sed -i 's/^Color/#&/' $pac
-      echo "Installing archlinux-keyring..."
-      $rpi_aui/main.sh pkg_in archlinuxarm-keyring
-      ;;
-    debian) ;;
-  esac
-  sleep $defsleep
 }
 
 function partm() {
@@ -86,29 +82,16 @@ function partm() {
   #fdisk /dev/mmcblk0
 }
 
-#function passm()
-#{
-#  ## Password Update
-#  echo "Please enter a new password for the root"
-#  echo " "
-#  passwd # To set new password for Root User
-#  sleep $defsleep+1
-#  ui
-#}
-
 function hname() {  # Change hostname the systemd way
   read -p "Enter the new hostname: " hn && hostnamectl set-hostname $hn
   echo "Your new hostname is:" $(hostname)
 }
 
 function set_locale() {	# Set the locale
-  # TODO(pickfire): Add function to set locale
-  # https://wiki.gentoo.org/wiki/Localization/HOWTO
-  # https://wiki.archlinux.org/index.php/Locale
   echo "Still in progress"
 }
 
-function ui() { # User Interface
+function menu() { # User Interface
   $rpi_aui/./main.sh title
   W="$r**$w"; echo -e "Press$r q$w to quit
   $W --> To do (Be Cautious)
