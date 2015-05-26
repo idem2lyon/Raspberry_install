@@ -1,5 +1,5 @@
 #!/bin/bash
-# Ultimate Rapsberry Installation scripts
+# Ultimate Rapsberry Installation Scripts
 # Description:  Install or uninstall Uris
 # Usage:        ./install.sh --help
 #---------------------------------------------------------------------------
@@ -21,7 +21,7 @@
 # Run this script after your first boot with archlinux (as root)
 #----------------------------------------------------------------------------
 # Default Variables
-aui_path=/opt
+uris_path=/opt
 defsleep=1
 
 
@@ -32,6 +32,7 @@ function thank() {
   echo ""
   echo "Thank You"
   echo "By idem2lyon"
+  echo "Please, visit http://geekandmore.fr"
   sleep 1.5
   clear
   exit 0
@@ -53,16 +54,26 @@ function net() {
   echo -en "Checking for internet connection"; sleep 0.2
   for i in $(seq 3); do echo -n '.'; sleep 0.8; done  # waiting time
   ping -c 3 8.8.8.8 &>/dev/null && { echo -e "${G}Success!\n$W"; return \
-    0; } || { echo -e "${R}Failure! Please connect to the Internet!\n$W" >&2;
+    0; } || { echo -e "${R}Failure! Please connect to the Internet first!\n$W" >&2;
     return 1; }
 }
 
 function title() { echo -e "\033[92m\
-      ____  ____  _       ___   __  ______
-     / __ \/ __ \(_)     /   | / / / /  _/   The Raspberry PI
-    / /_/ / /_/ / ______/ /| |/ / / // /    Arch Linux ARM
-   / _, _/ ____/ /_____/ ___ / /_/ _/ /    [ Ultimate ]
-  /_/ |_/_/   /_/     /_/  |_\____/___/   Installer\n\033[m"; return 0
+ _   _      _                                                                                                                 
+| | | |_ __(_)___     The Ultimate                                                                                                        
+| | | | '__| / __|        Raspberry                                                                                                    
+| |_| | |  | \__ \            Installation                                                                                                
+ \___/|_|  |_|___/                Scripts\n\033[m"; return 0
+
+echo ""
+echo "##############################################################"
+echo "##   Welcome to the ...                                     ##"
+echo "##   Ultimate Rpi Installation Scripts v1.0                 ##"
+echo "##   -- By idem2lyon                                        ##"
+echo "##   Please, visit http://geekandmore.fr                    ##"
+echo "##############################################################"
+echo "  "
+sleep 1  
 }
 
 #---------------------------------------------------------------------------
@@ -76,33 +87,23 @@ function title() { echo -e "\033[92m\
 # Root privilege
 [[ $UID -ne 0 ]] && { echo -e "\e[31mPlease run as root!\e[m"; exit 1; }
 
+# Check Internet connection
 net
 
 # Print the title
 title
-echo ""
-echo "##############################################################"
-echo "##   Welcome to Setup Pi v1.0                               ##"
-echo "##   -- By kingspp                                          ##"
-echo "##############################################################"
-echo "  "
-sleep 1
 
 # Confirmation for installation
-read -p "Do you want to install Ultimate Raspberry Installation scripts? " -e -n 1 ch
+read -p "Do you want to install Ultimate Raspberry Installation Scripts? " -e -n 1 ch
 [[ $ch != [Yy] ]] && thank
 
 # Install dependencies
-hash git 2>/dev/null || { echo "Installing Git..."; pacman -S --noconfirm git; }
+hash git 2>/dev/null || { echo "Installing Git..."; aptitude install git; }
 
 # Clone the repository and setup
 cd /opt && git clone https://github.com/idem2lyon/Raspberry_install && cd Raspberry_install
-chmod +x archi.sh
-/opt/Raspberry_install/archi.sh 
-/opt/Raspberry_install/disp.sh
-/opt/Raspberry_install/oc.sh 
-/opt/Raspberry_install/userm.sh
-/opt/Raspberry_install/util.sh
+chmod +x setup.sh
+./setup.sh
 echo "Installation is complete."
 sleep 2
 
