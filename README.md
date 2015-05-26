@@ -1,5 +1,4 @@
-raspberry
-
+#raspberry
 How to create a backup image of your SD card while your Raspberry PI is running?
 
 You can create a backup (.img) of your SD card to a network / USB drive while the card is inserted in your Raspberry PI!
