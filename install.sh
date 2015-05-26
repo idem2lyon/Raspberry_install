@@ -45,8 +45,8 @@ function checkr() { # Check if user is running as root
 #  fi
 #}
 
-function defins() { # Default Installation
-  $rpi_aui/./main.sh title
+function install() { # Default Installation
+  $rpi_aui/main.sh title
   echo "Updating $(grep "^ID=" /etc/*-release|cut -d= -f2)..."
   $rpi_aui/main.sh pkg_up   # Update distribution
   $rpi_aui/main.sh pkg_de   # Package management initialization
