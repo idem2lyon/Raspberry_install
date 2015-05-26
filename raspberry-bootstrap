@@ -1,0 +1,90 @@
+echo "Doing Debian Updates (slow) ..."
+sudo aptitude -y update
+sudo aptitude -y upgrade
+sudo aptitude -y dist-upgrade
+sudo aptitude -y autoclean
+sudo aptitude -y full-upgrade
+
+echo "Installing Raspberry Pi Packages"
+sudo aptitude -y libraspberrypi-bin libraspberrypi0 raspberrypi-bootloader libraspberrypi-doc libraspberrypi-dev
+
+echo "Installing Base Packages"
+sudo aptitude -y install libgl1-mesa-dri libparse-debianchangelog-perl uuid-runtime xfonts-base gnupg-curl oss-compat upower libreadline5 sysv-rc-conf sysstat
+
+echo "Installing Multimedia Packages"
+sudo aptitude -y install xrdp ffmpeg pulseaudio-esound-compat moc
+
+echo "Installing Productivity Packages"
+sudo aptitude -y install chromium-browser openoffice.org gimp
+
+echo "Installing USB WLAN Firmware"
+sudo aptitude -y install zd1211-firmware firmware-ralink firmware-realtek
+
+echo "Installing Web Servers"
+sudo aptitude -y install apache2 lighttpd nginx
+
+echo "Installing Languages"
+sudo aptitude -y install ruby ruby-dev rubygems rdoc python php5 python-pygame python-rpi.gpio python3-rpi.gpio
+
+echo "Installing Standard Tools"
+sudo aptitude -y install irssi telnet dnsutils bluetooth whois
+
+echo "Installing JRE"
+sudo aptitude -y install default-jre-headless
+
+echo "Installing SQLite"
+sudo aptitude -y install libsqlite-dev sqlite sqlite-doc libsqlite3-dev sqlite3 sqlite3-doc
+
+echo "Installing Development Environment"
+sudo aptitude -y install vim git git-all tmux screen subversion
+
+echo "Installing System/Security"
+sudo aptitude -y install libpcap-dev libpcap-ruby python-libpcap bridge-utils tcpdump tor nmap python-nmap
+
+echo "Installing R (enough for R Studio Server)"
+sudo aptitude -y install r-base r-base-core r-base-dev r-recommended gdebi-core libapparmor1
+
+echo "Installing PostgreSQL 9.1"
+sudo aptitude -y install postgresql-9.1 postgresql-client-9.1 postgresql-contrib-9.1 postgresql-doc-9.1 postgresql-server-dev-9.1
+
+echo "Installing MySQL 5.5"
+sudo aptitude -y install percona-toolkit mysql-client-5.5 mysql-server-5.5 mysql-server-core-5.5 mysql-source-5.5 libmysqlclient-dev
+
+echo "Setting up Database Ruby Gems"
+sudo gem install pg
+sudo gem install mysql2
+
+echo "Setting up Standard Base Ruby Gems"
+sudo gem install json
+sudo gem install multi_json
+sudo gem install rdoc
+sudo gem install rake
+sudo gem install actionmailer
+sudo gem install activesupport
+sudo gem install activemodel
+sudo gem install actionpack
+sudo gem install activerecord
+sudo gem install activeresource
+
+echo "Setting up Rails"
+sudo aptitude -y install node
+sudo gem install rails
+
+echo "Setting up VIM (janus) ..."
+curl -Lo- http://bit.ly/janus-bootstrap | bash
+echo 'let NERDTreeShowHidden=1' >> ~/.vimrc
+
+echo "Stopping expensive services"
+sudo update-rc.d mysql remove
+sudo /etc/init.d/mysql stop
+sudo update-rc.d tor remove
+sudo /etc/init.d/tor stop
+sudo /etc/init.d/postgresql stop
+sudo update-rc.d postgresql remove
+
+echo "Doing Debian Updates (slow) ..."
+sudo aptitude -y update
+sudo aptitude -y upgrade
+sudo aptitude -y dist-upgrade
+sudo aptitude -y autoclean
+sudo aptitude -y full-upgrade
