@@ -1,7 +1,7 @@
 #!/bin/bash
 # Ultimate Rapsberry Installation Scripts
 # Description:  Install or uninstall Uris
-# Usage:        ./install.sh --help
+# Usage:        ./setup.sh --help
 #---------------------------------------------------------------------------
 #    Copyright (C) idem2lyon 2015
 #
