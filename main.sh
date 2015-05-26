@@ -30,33 +30,11 @@ r='\033[91m'; g='\033[92m'; w='\033[0m' # Colours
 #----------------------------------------------------------------------------
 # Functions
 #----------------------------------------------------------------------------
-function update() { # Self-update
-  hash git 2>/dev/null || $pkg_in git # Install git if not installed
-  cd $rpi_aui && git pull
-}
-
-#function perm() {   # Change permission
-#  $rpi_aui/./main.sh title
-#  echo "Changing Permissions..."
-#  chmod +x *.sh *.py
-#  sleep $defsleep
-#}
-
 function checkr() { # Check if user is running as root
   [[ "$UID" != 0 ]] && { echo "Please run as root!"; exit 1; }
   echo "User running as root!!"
   sleep $defsleep
 }
-
-#function top() { # function top -> $rpi_aui/./main.sh title
-#  clear
-#  echo "##############################################################"
-#  echo "##   Welcome to Uris                                        ##"
-#  echo "##   -- By idem2lyon                                        ##"
-#  echo "##############################################################"
-#  echo "  "
-#  sleep $defsleep
-#}
 
 #function ask() { # ask -> $rpi_aui/./yn.sh "Is this what you want? [Y/n]"
 #  read ch
@@ -65,30 +43,6 @@ function checkr() { # Check if user is running as root
 #  else
 #  	thank
 #  fi
-#}
-
-#function thank # thank replaced by $rpi_aui/./main.sh thank
-#  top
-#  echo ""
-#  echo ""
-#  echo "Thank You"
-#  echo "--By Kingspp"
-#  echo " Reboot the system to apply changes?? [y/n]"
-#  read ch
-#  if [ "$ch" == 'y' ]; then
-#  reboot
-#  else
-#  clear
-#  exit
-#  fi
-#}
-
-#function pingcheck() {
-#  $rpi_aui/./main.sh title
-#  echo -e "To check if the pi got Internet??!!\n"
-#  ping -c 3 google.com 2>/dev/null && { echo -e "Success! Pi's got net!!"; \
-#    sleep $uisleep; ui; } || \
-#    { echo "Fail! Please connect to the Internet and Try Again"; exit 1; }
 #}
 
 function defins() { # Default Installation
