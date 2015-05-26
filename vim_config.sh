@@ -6,6 +6,13 @@ function die()
     exit 1
 }
 
+# Install vim
+apt-get install vim
+
+# Set vim as default editor
+update-alternatives --set editor /usr/bin/vim.basic
+
+
 # Add .old to any existing Vim file in the home directory
 for filepath in "${HOME}/.vim" "${HOME}/.vimrc" "${HOME}/.gvimrc"; do
   if [ -e $filepath ]; then
