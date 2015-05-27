@@ -98,7 +98,7 @@ greetings="$greetings$borderBar$(color $greetingsColor "$(center "$(date +"%A, %
 
 # System information
 read loginFrom loginDate <<< $(last $me -di | awk 'NR==2 { print $3,$4" "$6" "$5" "$7}')
-login="the ($loginDate) from ($loginFrom)"
+login="$loginDate from $loginFrom"
 
 label1="$(extend "$login")"
 label1="$borderBar  $(color $statsLabelColor "Last Login....:") $label1$borderBar"
