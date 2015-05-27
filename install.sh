@@ -161,8 +161,8 @@ motd() {
   chmod +x ${uris}/config/motd.sh
   mv /etc/motd /etc/motd_backup
   cp ${uris}/config/motd.sh /etc/profile.d/
-  /bin/sed -i -e 's/^#PrintLastLog yes*/PrintLastLog no/' /etc/ssh/sshd_config
-  systemctl restart sshd
+  /bin/sed -i -e 's/^PrintLastLog yes*/PrintLastLog no/' /etc/ssh/sshd_config
+  service ssh restart
   echo "motd added"
 }
 
