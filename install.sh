@@ -27,37 +27,74 @@ uisleep=2;
 r='\033[91m'; g='\033[92m'; w='\033[0m' # Colours
 
 
-#----------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 # Functions
-#----------------------------------------------------------------------------
-function checkr() { # Check if user is running as root
+#---------------------------------------------------------------------------
+thank() {
+  echo ""
+  echo "Thank You"
+  echo "By idem2lyon"
+  echo "Please, visit http://geekandmore.fr"
+  sleep 1.5
+  clear
+  exit 0
+}
+
+do_uninstall() {
+  echo "Uninstall is still in progress."
+  exit 0
+}
+
+do_help() {
+  echo "Usage: $0 [uninstall|help]
+Run without any argument will default to installation."
+  exit 0
+}
+
+check_net() { 
+  echo -en "Checking for internet connection"; sleep 0.2
+  for i in $(seq 3); do echo -n '.'; sleep 0.8; done  # waiting time
+  ping -c 3 8.8.8.8 &>/dev/null && { echo -e "${G}Success!\n$W"; return \
+    0; } || { echo -e "${R}Failure! Please connect to the Internet first!\n$W" >&2;
+    return 1; }
+}
+
+title() { echo -e "\033[92m\
+ _   _      _                                                                                                                 
+| | | |_ __(_)___     The Ultimate                                                                                                        
+| | | | '__| / __|        Raspberry                                                                                                    
+| |_| | |  | \__ \            Installation                                                                                                
+ \___/|_|  |_|___/                Scripts\n\033[m"; return 0
+
+echo ""
+echo "##############################################################"
+echo "##   Welcome to the ...                                     ##"
+echo "##   Ultimate Rpi Installation Scripts v1.0                 ##"
+echo "##   -- By idem2lyon                                        ##"
+echo "##   Please, visit http://geekandmore.fr                    ##"
+echo "##############################################################"
+echo "  "
+sleep 1  
+}
+
+yesorno() {                                                                                                                   
+        while [ 1 -eq 1 ]                                                                                                     
+        do                                                                                                                    
+                echo  "$1 "                                                                                                   
+                read answer                                                                                                   
+                answer=$(echo $answer | tr '[a-z]' '[A-Z]')                                                                   
+                [[ $answer == [Y] ]] && { return 0; }                                                                         
+                [[ $answer == [N] ]] && { return 1; }                                                                         
+        done                                                                                                                  
+}                                                                                                                             
+
+check_root() { 
   [[ "$UID" != 0 ]] && { echo "Please run as root!"; exit 1; }
   echo "User running as root!!"
   sleep $defsleep
 }
 
-#function ask() { # ask -> $rpi_aui/./yn.sh "Is this what you want? [Y/n]"
-#  read ch
-#  if [ "$ch" == 'y' ] || [ "ch" == "Y" ] ; then
-#  	echo ""
-#  else
-#  	thank
-#  fi
-#}
-
-function yesorno() {
-  while : ; do  # ask again when there's no default preference
-  # Usage: $ main.sh yn "Question: [Y/n]"   Note: [Y/n] -> default Y
-  echo -en "$1 "; read -n 1 ans; echo # echo with 1 space & read 1 character
-  [[ $ans == [Yy] ]] && { exit 0; } # return success if ans = y or Y
-  [[ $ans == [Nn] ]] && { exit 1; } # return failure if ans = n or N
-  [[ $(grep -o '\[./.\]' <<< $1) == *'Y'* ]] && exit 0 # [Y/n] -> default Y
-  [[ $(grep -o '\[./.\]' <<< $1) == *'N'* ]] && exit 1 # [y/N] -> default N
-done
-}
-
-function install() { # Default Installation
-  $rpi_aui/main.sh title
+install() { # Default Installation
   echo "Updating $(grep "^ID=" /etc/*-release|cut -d= -f2)..."
   $rpi_aui/main.sh pkg_up   # Update distribution
   $rpi_aui/main.sh pkg_de   # Package management initialization
@@ -65,7 +102,7 @@ function install() { # Default Installation
   $rpi_aui/main.sh pkg_in base base-devel
 }
 
-function partm() {
+partm() {
   $rpi_aui/./main.sh title
   echo " Lets Utilize full size of the Memory Card "
   echo "Partition Manager"
@@ -92,7 +129,6 @@ function set_locale() {	# Set the locale
 }
 
 function menu() { # User Interface
-  $rpi_aui/./main.sh title
   W="$r**$w"; echo -e "Press$r q$w to quit
   $W --> To do (Be Cautious)
 
@@ -111,11 +147,13 @@ function menu() { # User Interface
 ########################################################"
   read -p "Select an option: " opt
   case $opt in
-    1) $rpi_aui/main.sh net; sleep 1 ;;
+    1) check_net; sleep 1 ;;
 
-    2) $rpi_aui/./yn.sh "Do you want to update Arch? [Y/n]" || ui # Else
+    2)yesorno "Do you want to update Arch? [Y/n]" &&
       echo "Updating Arch Linux to its Latest Release..."
+      apt-get -y update && apt-get -y upgrade && apt-get -y dist-upgrade && apt-get -y autoremove
       pacman -Syu --noconfirm && echo " You have the latest Arch ;) "
+      yesorno "You nedd to reboot to apply changes. Do you want to doit now? [Y/n]" && reboot
       ;;
 
     3) $rpi_aui/./yn.sh "You are $rWARNED$w not to manage Partitions. Are you sure? [y/N]" || ui # Too long! -> Need to shorten
