@@ -94,6 +94,23 @@ check_root() {
   sleep $defsleep
 }
 
+update_arch() {
+  yesorno "Do you want to update Arch? [Y/n]" &&
+  echo "Updating Arch Linux to its Latest Release..."
+  apt-get -y update && apt-get -y upgrade && apt-get -y dist-upgrade && apt-get -y autoremove
+  yesorno "You nedd to reboot to apply changes. Do you want to doit now? [Y/n]" && reboot
+}
+
+conf_vim() {
+  echo "Install vim"
+  aptitude install vim vim-nox
+  echo "Update default editor"
+  update-alternatives --set editor /usr/bin/vim.nox
+  echo "Configuring vim"
+  cp /etc/vim/vimrc /etc/vimrc.backup
+  cp ${uris}/config/vimrc /etc/vim/vimrc 
+}
+
 install() { # Default Installation
   echo "Updating $(grep "^ID=" /etc/*-release|cut -d= -f2)..."
   $rpi_aui/main.sh pkg_up   # Update distribution
@@ -119,14 +136,37 @@ partm() {
   #fdisk /dev/mmcblk0
 }
 
-function hname() {  # Change hostname the systemd way
-  read -p "Enter the new hostname: " hn && hostnamectl set-hostname $hn
+hname() {  
+  read -p "Enter the new hostname: " hn 
+  echo $hn > /etc/hostname
+  hostname -F /etc/hostname
+  /etc/init.d/hostname.sh start
   echo "Your new hostname is:" $(hostname)
 }
 
-function set_locale() {	# Set the locale
-  echo "Still in progress"
+set_locale() {	
+  echo "Configuring locale"
+  echo "fr_FR ISO-8859-1
+  fr_FR.UTF-8 UTF-8" > /etc/locale.gen
+  
+  echo "LANG=\"fr_FR.UTF-8\"" > /etc/default/locale
+  echo"" > /etc/environment
+  /usr/sbin/locale-gen
+  echo "Locales configured"
 }
+
+motd() {
+  echo "Fancy motd"
+  chown root:root ${uris}/config/motd.sh
+  chmod +x ${uris}/config/motd.sh
+  mv /etc/motd /etc/motd_backup
+  cp ${uris}/config/motd.sh /etc/profile.d/
+  /bin/sed -i -e 's/^#PrintLastLog yes*/PrintLastLog no/' /etc/ssh/sshd_config
+  systemctl restart sshd
+  echo "motd added"
+}
+
+
 
 function menu() { # User Interface
   W="$r**$w"; echo -e "Press$r q$w to quit
