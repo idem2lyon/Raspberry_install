@@ -28,7 +28,7 @@ defsleep=1
 #---------------------------------------------------------------------------
 # Functions
 #---------------------------------------------------------------------------
-function thank() {
+thank() {
   echo ""
   echo "Thank You"
   echo "By idem2lyon"
@@ -38,19 +38,19 @@ function thank() {
   exit 0
 }
 
-function do_uninstall() {
+do_uninstall() {
   echo "Uninstall is still in progress."
   exit 0
 }
 
-function do_help() {
+do_help() {
   echo "Usage: $0 [uninstall|help]
 Run without any argument will default to installation."
   exit 0
 }
 
 
-function net() { 
+net() { 
   echo -en "Checking for internet connection"; sleep 0.2
   for i in $(seq 3); do echo -n '.'; sleep 0.8; done  # waiting time
   ping -c 3 8.8.8.8 &>/dev/null && { echo -e "${G}Success!\n$W"; return \
@@ -58,7 +58,7 @@ function net() {
     return 1; }
 }
 
-function title() { echo -e "\033[92m\
+title() { echo -e "\033[92m\
  _   _      _                                                                                                                 
 | | | |_ __(_)___     The Ultimate                                                                                                        
 | | | | '__| / __|        Raspberry                                                                                                    
@@ -76,6 +76,22 @@ echo "  "
 sleep 1  
 }
 
+yesorno() {                                                                                                                   
+        while [ 1 -eq 1 ]                                                                                                     
+        do                                                                                                                    
+                echo  "$1 "                                                                                                   
+                read answer                                                                                                   
+                answer=$(echo $answer | tr '[a-z]' '[A-Z]')                                                                   
+                [[ $answer == [Y] ]] && { return 0; }                                                                         
+                [[ $answer == [N] ]] && { return 1; }                                                                         
+        done                                                                                                                  
+}                                                                                                                             
+
+root() {
+  [[ $UID -eq 0 ]] && return 0 || { echo -e "\033[91mPlease run as root! \
+Try '\033[32msudo su\033[31m'\033[0m" >&2; exit 1; }
+}
+
 #---------------------------------------------------------------------------
 # Main
 #---------------------------------------------------------------------------
@@ -85,7 +101,7 @@ sleep 1
 [[ $# -gt 0 && -n $1 ]] && do_help      # Help for those enter nonsense
 
 # Root privilege
-[[ $UID -ne 0 ]] && { echo -e "\e[31mPlease run as root!\e[m"; exit 1; }
+root
 
 # Check Internet connection
 net
@@ -94,8 +110,7 @@ net
 title
 
 # Confirmation for installation
-read -p "Do you want to install Ultimate Raspberry Installation Scripts? " -e -n 1 ch
-[[ $ch != [Yy] ]] && thank
+yesorno "Do you want to execute Ultimate Raspberry Installation Scripts? [y/N]" && echo "Ok, let's go"  && thank
 
 # Install dependencies
 hash git 2>/dev/null || { echo "Installing Git..."; aptitude install git; }
