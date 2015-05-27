@@ -78,14 +78,14 @@ sleep 1
 }
 
 yesorno() {                                                                                                                   
-        while [ 1 -eq 1 ]                                                                                                     
-        do                                                                                                                    
-                echo  "$1 "                                                                                                   
-                read answer                                                                                                   
-                answer=$(echo $answer | tr '[a-z]' '[A-Z]')                                                                   
-                [[ $answer == [Y] ]] && { return 0; }                                                                         
-                [[ $answer == [N] ]] && { return 1; }                                                                         
-        done                                                                                                                  
+  while [ 1 -eq 1 ]                                                                                                     
+  do                                                                                                                    
+    echo  "$1 "                                                                                                   
+    read answer                                                                                                   
+    answer=$(echo $answer | tr '[a-z]' '[A-Z]')                                                                   
+    [[ $answer == [Y] ]] && { return 0; }                                                                         
+    [[ $answer == [N] ]] && { return 1; }                                                                         
+  done                                                                                                                  
 }                                                                                                                             
 
 check_root() { 
@@ -98,7 +98,7 @@ update_arch() {
   yesorno "Do you want to update Arch? [Y/n]" &&
   echo "Updating Arch Linux to its Latest Release..."
   apt-get -y update && apt-get -y upgrade && apt-get -y dist-upgrade && apt-get -y autoremove
-  yesorno "You nedd to reboot to apply changes. Do you want to doit now? [Y/n]" && reboot
+  yesorno "You need to reboot to apply changes. Do you want to doit now? [Y/n]" && reboot
 }
 
 conf_vim() {
@@ -109,31 +109,6 @@ conf_vim() {
   echo "Configuring vim"
   cp /etc/vim/vimrc /etc/vimrc.backup
   cp ${uris}/config/vimrc /etc/vim/vimrc 
-}
-
-install() { # Default Installation
-  echo "Updating $(grep "^ID=" /etc/*-release|cut -d= -f2)..."
-  $rpi_aui/main.sh pkg_up   # Update distribution
-  $rpi_aui/main.sh pkg_de   # Package management initialization
-  sleep $defsleep; echo "Installing base and base-devel packages..."
-  $rpi_aui/main.sh pkg_in base base-devel
-}
-
-partm() {
-  $rpi_aui/./main.sh title
-  echo " Lets Utilize full size of the Memory Card "
-  echo "Partition Manager"
-  echo " "
-  echo " Commands "
-  echo " "
-  echo "d - delete a partition"
-  echo "l - list known partition types"
-  echo "n - add a new partition"
-  echo "p - print the partition table"
-  echo "t - change a partition type"
-  echo "v - verify the partition table"
-  echo " "
-  #fdisk /dev/mmcblk0
 }
 
 hname() {  
@@ -165,6 +140,35 @@ motd() {
   service ssh restart
   echo "motd added"
 }
+
+# ^ validé
+
+
+install() { # Default Installation
+  echo "Updating $(grep "^ID=" /etc/*-release|cut -d= -f2)..."
+  $rpi_aui/main.sh pkg_up   # Update distribution
+  $rpi_aui/main.sh pkg_de   # Package management initialization
+  sleep $defsleep; echo "Installing base and base-devel packages..."
+  $rpi_aui/main.sh pkg_in base base-devel
+}
+
+partm() {
+  $rpi_aui/./main.sh title
+  echo " Lets Utilize full size of the Memory Card "
+  echo "Partition Manager"
+  echo " "
+  echo " Commands "
+  echo " "
+  echo "d - delete a partition"
+  echo "l - list known partition types"
+  echo "n - add a new partition"
+  echo "p - print the partition table"
+  echo "t - change a partition type"
+  echo "v - verify the partition table"
+  echo " "
+  #fdisk /dev/mmcblk0
+}
+
 
 
 
